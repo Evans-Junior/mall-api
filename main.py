@@ -1,0 +1,49 @@
+from fastapi import FastAPI, HTTPException
+from data import malls
+
+app = FastAPI(
+    title="Ghana Mall API",
+    description="API for retrieving mall names, cities, and rankings in Ghana",
+    version="1.0.0"
+)
+
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Ghana Mall API"}
+
+
+# ✅ Get all malls
+@app.get("/malls")
+def get_malls():
+    return malls
+
+
+# ✅ Get mall by ID
+@app.get("/mall/{mall_id}")
+def get_mall(mall_id: int):
+    mall = next((m for m in malls if m["id"] == mall_id), None)
+    if not mall:
+        raise HTTPException(status_code=404, detail="Mall not found")
+    return mall
+
+
+# ✅ Get all mall names
+@app.get("/malls/names")
+def get_mall_names():
+    return [m["name"] for m in malls]
+
+
+# ✅ Get malls by class/rank
+@app.get("/malls/class/{rank}")
+def get_malls_by_rank(rank: str):
+    result = [m for m in malls if m["rank"].lower() == rank.lower()]
+    if not result:
+        raise HTTPException(status_code=404, detail="No malls found in this class")
+    return result
+
+
+# ✅ Get list of all available ranks
+@app.get("/malls/classes")
+def get_all_ranks():
+    return list(set(m["rank"] for m in malls))
