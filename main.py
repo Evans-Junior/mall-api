@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
 from data import malls
 
 app = FastAPI(
@@ -7,6 +9,21 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
+origins = [
+    "*",    # ⚠️ allow all domains
+    # "http://localhost:3000",
+    # "http://127.0.0.1:5500",
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,       # domains allowed
+    allow_credentials=True,
+    allow_methods=["*"],         # GET, POST, PUT, DELETE
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
