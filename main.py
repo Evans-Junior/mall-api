@@ -64,3 +64,7 @@ def get_malls_by_rank(rank: str):
 @app.get("/malls/classes")
 def get_all_ranks():
     return list(set(m["rank"] for m in malls))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
